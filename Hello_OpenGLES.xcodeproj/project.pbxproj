@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D75AB6624CDB6F900AA11BE /* timg.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D75AB6524CDB6F900AA11BE /* timg.png */; };
+		9D75AB6824CDB78500AA11BE /* kunkun.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9D75AB6724CDB78500AA11BE /* kunkun.jpg */; };
 		9DEE207E24CBAF1400E2854C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DEE207D24CBAF1400E2854C /* AppDelegate.m */; };
 		9DEE208124CBAF1400E2854C /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DEE208024CBAF1400E2854C /* SceneDelegate.m */; };
 		9DEE208424CBAF1400E2854C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DEE208324CBAF1400E2854C /* ViewController.m */; };
@@ -17,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9D75AB6524CDB6F900AA11BE /* timg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = timg.png; sourceTree = "<group>"; };
+		9D75AB6724CDB78500AA11BE /* kunkun.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kunkun.jpg; sourceTree = "<group>"; };
 		9DEE207924CBAF1400E2854C /* Hello_OpenGLES.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hello_OpenGLES.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DEE207C24CBAF1400E2854C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		9DEE207D24CBAF1400E2854C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -63,6 +67,8 @@
 			children = (
 				9DEE207C24CBAF1400E2854C /* AppDelegate.h */,
 				9DEE207D24CBAF1400E2854C /* AppDelegate.m */,
+				9D75AB6524CDB6F900AA11BE /* timg.png */,
+				9D75AB6724CDB78500AA11BE /* kunkun.jpg */,
 				9DEE207F24CBAF1400E2854C /* SceneDelegate.h */,
 				9DEE208024CBAF1400E2854C /* SceneDelegate.m */,
 				9DEE208224CBAF1400E2854C /* ViewController.h */,
@@ -133,9 +139,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D75AB6624CDB6F900AA11BE /* timg.png in Resources */,
 				9DEE208C24CBAF1500E2854C /* LaunchScreen.storyboard in Resources */,
 				9DEE208924CBAF1500E2854C /* Assets.xcassets in Resources */,
 				9DEE208724CBAF1400E2854C /* Main.storyboard in Resources */,
+				9D75AB6824CDB78500AA11BE /* kunkun.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,7 +233,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -277,7 +285,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -291,6 +299,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = Hello_OpenGLES/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -307,6 +316,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = Hello_OpenGLES/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
