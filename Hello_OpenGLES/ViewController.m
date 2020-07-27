@@ -202,13 +202,6 @@
     cEffect = [[GLKBaseEffect alloc]init];
     cEffect.texture2d0.enabled = GL_TRUE;
     cEffect.texture2d0.name = textureInfo.name;
-    
-    CGFloat aspect = fabs(self.view.bounds.size.width / self.view.bounds.size.height);
-    GLKMatrix4 projectMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), aspect, 1.0f, 200.0f);
-    cEffect.transform.projectionMatrix = projectMatrix;
-    
-    GLKMatrix4 modelviewMatrix = GLKMatrix4Translate(GLKMatrix4Identity, 0, 0, -4.0f);
-    cEffect.transform.modelviewMatrix = modelviewMatrix;
 }
 
 #pragma mark - GLKViewDelegate
@@ -233,10 +226,14 @@
 {
     static GLuint angle = 0;
     angle = (angle + 2) % 360;
+    
+    CGFloat aspect = fabs(self.view.bounds.size.width / self.view.bounds.size.height);
+    GLKMatrix4 projectMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), aspect, 1.0f, 200.0f);
+    cEffect.transform.projectionMatrix = projectMatrix;
+    
     GLKMatrix4 modelViewMatrix = GLKMatrix4Translate(GLKMatrix4Identity, 0, 0, -4.0);
     modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, GLKMathDegreesToRadians(angle), 0.3f, 0.5f, 0.7f);
     cEffect.transform.modelviewMatrix = modelViewMatrix;
-    
 }
 
 
