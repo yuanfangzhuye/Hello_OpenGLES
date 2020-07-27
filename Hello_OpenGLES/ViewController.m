@@ -211,6 +211,8 @@
     cEffect.transform.modelviewMatrix = modelviewMatrix;
 }
 
+#pragma mark - GLKViewDelegate
+
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
     //开启深度测试
