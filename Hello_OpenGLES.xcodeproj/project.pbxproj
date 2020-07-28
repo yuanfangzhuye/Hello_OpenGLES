@@ -16,6 +16,7 @@
 		9DEE208924CBAF1500E2854C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DEE208824CBAF1500E2854C /* Assets.xcassets */; };
 		9DEE208C24CBAF1500E2854C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DEE208A24CBAF1500E2854C /* LaunchScreen.storyboard */; };
 		9DEE208F24CBAF1500E2854C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DEE208E24CBAF1500E2854C /* main.m */; };
+		F2143CD224D01F6C007DC701 /* TLbView.m in Sources */ = {isa = PBXBuildFile; fileRef = F2143CD124D01F6C007DC701 /* TLbView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,8 @@
 		9DEE208B24CBAF1500E2854C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9DEE208D24CBAF1500E2854C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9DEE208E24CBAF1500E2854C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F2143CD024D01F6C007DC701 /* TLbView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TLbView.h; sourceTree = "<group>"; };
+		F2143CD124D01F6C007DC701 /* TLbView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TLbView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +76,8 @@
 				9DEE208024CBAF1400E2854C /* SceneDelegate.m */,
 				9DEE208224CBAF1400E2854C /* ViewController.h */,
 				9DEE208324CBAF1400E2854C /* ViewController.m */,
+				F2143CD024D01F6C007DC701 /* TLbView.h */,
+				F2143CD124D01F6C007DC701 /* TLbView.m */,
 				9DEE208524CBAF1400E2854C /* Main.storyboard */,
 				9DEE208824CBAF1500E2854C /* Assets.xcassets */,
 				9DEE208A24CBAF1500E2854C /* LaunchScreen.storyboard */,
@@ -156,6 +161,7 @@
 			files = (
 				9DEE208424CBAF1400E2854C /* ViewController.m in Sources */,
 				9DEE207E24CBAF1400E2854C /* AppDelegate.m in Sources */,
+				F2143CD224D01F6C007DC701 /* TLbView.m in Sources */,
 				9DEE208F24CBAF1500E2854C /* main.m in Sources */,
 				9DEE208124CBAF1400E2854C /* SceneDelegate.m in Sources */,
 			);
