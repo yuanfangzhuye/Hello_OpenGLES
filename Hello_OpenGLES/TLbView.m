@@ -133,15 +133,27 @@
     
     glUseProgram(self.myPrograme);
     
+    //倒置的纹理坐标
     GLfloat attrArr[] = {
         0.5f, -0.5f, -1.0f,     1.0f, 0.0f,
         -0.5f, 0.5f, -1.0f,     0.0f, 1.0f,
         -0.5f, -0.5f, -1.0f,    0.0f, 0.0f,
-        
+
         0.5f, 0.5f, -1.0f,      1.0f, 1.0f,
         -0.5f, 0.5f, -1.0f,     0.0f, 1.0f,
         0.5f, -0.5f, -1.0f,     1.0f, 0.0f,
     };
+    
+    //正确的纹理坐标
+//    GLfloat attrArr[] = {
+//        0.5f, -0.5f, -1.0f,     1.0f, 1.0f,
+//        -0.5f, 0.5f, -1.0f,     0.0f, 0.0f,
+//        -0.5f, -0.5f, -1.0f,    0.0f, 1.0f,
+//
+//        0.5f, 0.5f, -1.0f,      1.0f, 0.0f,
+//        -0.5f, 0.5f, -1.0f,     0.0f, 0.0f,
+//        0.5f, -0.5f, -1.0f,     1.0f, 1.0f,
+//    };
     
     GLuint attrBuffer;
     glGenBuffers(1, &attrBuffer);
@@ -179,9 +191,11 @@
     
     CGRect rect = CGRectMake(0, 0, width, height);
     
+//    [self rotateTextureImage];
+    
 //    CGContextTranslateCTM(spriteContext, rect.origin.x, rect.origin.y);
-    CGContextTranslateCTM(spriteContext, 0, rect.size.height);
-    CGContextScaleCTM(spriteContext, 1.0f, -1.0f);
+//    CGContextTranslateCTM(spriteContext, 0, rect.size.height);
+//    CGContextScaleCTM(spriteContext, 1.0f, -1.0f);
 //    CGContextTranslateCTM(spriteContext, -rect.origin.x, -rect.origin.y);
     
     CGContextDrawImage(spriteContext, rect, spriteImage);
@@ -200,6 +214,26 @@
     free(spriteData);
     
     return 0;
+}
+
+//翻转矩阵
+- (void)rotateTextureImage
+{
+    GLuint rotate = glGetUniformLocation(self.myPrograme, "rotateMatrix");
+    
+    float radians = 180 * 3.14159f / 180.0f;
+    
+    float s = sin(radians);
+    float c = cos(radians);
+    
+    GLfloat zRotation[16] = {
+        c,-s,0,0,
+        s,c,0,0,
+        0,0,1,0,
+        0,0,0,1
+    };
+    
+    glUniformMatrix4fv(rotate, 1, GL_FALSE, zRotation);
 }
 
 #pragma mark ---- Shader
