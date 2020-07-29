@@ -17,6 +17,8 @@
 		9DEE208C24CBAF1500E2854C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DEE208A24CBAF1500E2854C /* LaunchScreen.storyboard */; };
 		9DEE208F24CBAF1500E2854C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DEE208E24CBAF1500E2854C /* main.m */; };
 		F2143CD224D01F6C007DC701 /* TLbView.m in Sources */ = {isa = PBXBuildFile; fileRef = F2143CD124D01F6C007DC701 /* TLbView.m */; };
+		F2143CD424D12616007DC701 /* shaderf.fsh in Resources */ = {isa = PBXBuildFile; fileRef = F2143CD324D12616007DC701 /* shaderf.fsh */; };
+		F2143CD624D1262B007DC701 /* shaderv.vsh in Resources */ = {isa = PBXBuildFile; fileRef = F2143CD524D1262B007DC701 /* shaderv.vsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		9DEE208E24CBAF1500E2854C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F2143CD024D01F6C007DC701 /* TLbView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TLbView.h; sourceTree = "<group>"; };
 		F2143CD124D01F6C007DC701 /* TLbView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TLbView.m; sourceTree = "<group>"; };
+		F2143CD324D12616007DC701 /* shaderf.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = shaderf.fsh; sourceTree = "<group>"; };
+		F2143CD524D1262B007DC701 /* shaderv.vsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = shaderv.vsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +78,8 @@
 				9D75AB6724CDB78500AA11BE /* kunkun.jpg */,
 				9DEE207F24CBAF1400E2854C /* SceneDelegate.h */,
 				9DEE208024CBAF1400E2854C /* SceneDelegate.m */,
+				F2143CD324D12616007DC701 /* shaderf.fsh */,
+				F2143CD524D1262B007DC701 /* shaderv.vsh */,
 				9DEE208224CBAF1400E2854C /* ViewController.h */,
 				9DEE208324CBAF1400E2854C /* ViewController.m */,
 				F2143CD024D01F6C007DC701 /* TLbView.h */,
@@ -147,6 +153,8 @@
 				9D75AB6624CDB6F900AA11BE /* timg.png in Resources */,
 				9DEE208C24CBAF1500E2854C /* LaunchScreen.storyboard in Resources */,
 				9DEE208924CBAF1500E2854C /* Assets.xcassets in Resources */,
+				F2143CD624D1262B007DC701 /* shaderv.vsh in Resources */,
+				F2143CD424D12616007DC701 /* shaderf.fsh in Resources */,
 				9DEE208724CBAF1400E2854C /* Main.storyboard in Resources */,
 				9D75AB6824CDB78500AA11BE /* kunkun.jpg in Resources */,
 			);

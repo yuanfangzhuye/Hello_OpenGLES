@@ -23,44 +23,76 @@
 
 @implementation TLbView
 
-//从图片中加载纹理
-- (GLuint)setupTexture:(NSString *)fileName
+- (void)layoutSubviews
 {
-    CGImageRef spriteImage = [UIImage imageNamed:fileName].CGImage;
+    //1.设置图层
+    [self setupLayer];
     
-    if (!spriteImage) {
-        NSLog(@"Failed to load image %@", fileName);
-        exit(1);
-    }
+    //2.设置图形上下文
+    [self setupContext];
     
-    size_t width = CGImageGetWidth(spriteImage);
-    size_t height = CGImageGetHeight(spriteImage);
+    //3.清空缓存区
+    [self deleteRenderAndFrameBuffer];
+
+    //4.设置RenderBuffer
+    [self setupRenderBuffer];
     
-    GLubyte *spriteData = (GLubyte *)calloc(width *height *4, sizeof(GLubyte));
+    //5.设置FrameBuffer
+    [self setupFrameBuffer];
     
-    CGContextRef spriteContext = CGBitmapContextCreate(spriteData, width, height, 8, width*4, CGImageGetColorSpace(spriteImage), kCGImageAlphaPremultipliedLast);
-    
-    CGRect rect = CGRectMake(0, 0, width, height);
-    CGContextDrawImage(spriteContext, rect, spriteImage);
-    
-    CGContextRelease(spriteContext);
-    
-    glBindTexture(GL_TEXTURE_2D, 0);
-    
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    
-    float fw = width, fh = height;
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, fw, fh, 0, GL_RGBA, GL_UNSIGNED_BYTE, spriteData);
-    
-    free(spriteData);
-    
-    return 0;
+    //6.开始绘制
+    [self renderLayer];
 }
 
-//5.设置FrameBuffer
++ (Class)layerClass
+{
+    return [CAEAGLLayer class];
+}
+
+- (void)setupLayer
+{
+    self.myEagLayer = (CAEAGLLayer *)self.layer;
+    [self setContentScaleFactor:[UIScreen mainScreen].scale];
+    self.myEagLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:@false,kEAGLDrawablePropertyRetainedBacking,kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
+}
+
+- (void)setupContext
+{
+    EAGLRenderingAPI api = kEAGLRenderingAPIOpenGLES2;
+    EAGLContext *context = [[EAGLContext alloc] initWithAPI:api];
+    if (!context) {
+        NSLog(@"创建失败");
+        return;
+    }
+    
+    if (![EAGLContext setCurrentContext:context]) {
+        NSLog(@"设置上下文失败");
+        return;
+    }
+    
+    self.myContext = context;
+}
+
+- (void)deleteRenderAndFrameBuffer
+{
+    glDeleteBuffers(1, &_myColorRenderBuffer);
+    self.myColorRenderBuffer = 0;
+    
+    glDeleteBuffers(1, &_myColorFrameBuffer);
+    self.myColorFrameBuffer = 0;
+}
+
+- (void)setupRenderBuffer
+{
+    GLuint buffer;
+    glGenRenderbuffers(1, &buffer);
+    
+    self.myColorRenderBuffer = buffer;
+    
+    glBindRenderbuffer(GL_RENDERBUFFER, self.myColorRenderBuffer);
+    [self.myContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:self.myEagLayer];
+}
+
 - (void)setupFrameBuffer
 {
     GLuint buffer;
@@ -72,86 +104,124 @@
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, self.myColorRenderBuffer);
 }
 
-//4.设置RenderBuffer
-- (void)setupRenderBuffer
+- (void)renderLayer
 {
-    GLuint buffer;
-    glGenBuffers(1, &buffer);
+    glClearColor(0.3f, 0.4f, 0.5f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
     
-    self.myColorRenderBuffer = buffer;
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    glViewport(self.frame.origin.x * scale, self.frame.origin.y * scale, self.frame.size.width * scale, self.frame.size.height * scale);
     
-    glBindRenderbuffer(GL_RENDERBUFFER, self.myColorRenderBuffer);
+    NSString *vertFile = [[NSBundle mainBundle] pathForResource:@"shaderv" ofType:@"vsh"];
+    NSString *fragFile = [[NSBundle mainBundle] pathForResource:@"shaderf" ofType:@"fsh"];
     
-    [self.myContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:self.myEagLayer];
-}
-
-//清空缓存区
-- (void)deleteRenderAndFrameBuffer
-{
-    glDeleteBuffers(1, &_myColorRenderBuffer);
-    self.myColorRenderBuffer = 0;
+    self.myPrograme = [self loadShaders:vertFile withFrag:fragFile];
     
-    glDeleteBuffers(1, &_myColorFrameBuffer);
-    self.myColorFrameBuffer = 0;
-}
-
-//设置上下文
-- (void)setupContext
-{
-    EAGLRenderingAPI api = kEAGLRenderingAPIOpenGLES2;
+    glLinkProgram(self.myPrograme);
+    GLint linkStatus;
     
-    EAGLContext *context = [[EAGLContext alloc] initWithAPI:api];
-    
-    if (!context) {
-        NSLog(@"Create context failed!");
+    glGetProgramiv(self.myPrograme, GL_LINK_STATUS, &linkStatus);
+    if (linkStatus == GL_FALSE) {
+        GLchar message[512];
+        glGetProgramInfoLog(self.myPrograme, sizeof(message), 0, &message[0]);
+        NSString *messageString = [NSString stringWithUTF8String:message];
+        NSLog(@"Program Link Error:%@",messageString);
         return;
     }
-    //4.设置图形上下文
-    if (![EAGLContext setCurrentContext:context]) {
-        NSLog(@"setCurrentContext failed!");
-        return;
+    
+    NSLog(@"Program Link Success!");
+    
+    glUseProgram(self.myPrograme);
+    
+    GLfloat attrArr[] = {
+        0.5f, -0.5f, -1.0f,     1.0f, 0.0f,
+        -0.5f, 0.5f, -1.0f,     0.0f, 1.0f,
+        -0.5f, -0.5f, -1.0f,    0.0f, 0.0f,
+        
+        0.5f, 0.5f, -1.0f,      1.0f, 1.0f,
+        -0.5f, 0.5f, -1.0f,     0.0f, 1.0f,
+        0.5f, -0.5f, -1.0f,     1.0f, 0.0f,
+    };
+    
+    GLuint attrBuffer;
+    glGenBuffers(1, &attrBuffer);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, attrBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(attrArr), attrArr, GL_DYNAMIC_DRAW);
+    
+    GLuint position = glGetAttribLocation(self.myPrograme, "position");
+    glEnableVertexAttribArray(position);
+    glVertexAttribPointer(position, 3, GL_FLOAT, GL_FALSE, sizeof(GLfixed) * 5, NULL);
+    
+    GLuint textCoor = glGetAttribLocation(self.myPrograme, "textCoordinate");
+    glEnableVertexAttribArray(textCoor);
+    glVertexAttribPointer(textCoor, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (float *)NULL + 3);
+    
+    [self setupTexture:@"timg"];
+    glUniform1i(glGetUniformLocation(self.myPrograme, "colorMap"), 0);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    [self.myContext presentRenderbuffer:GL_RENDERBUFFER];
+}
+
+- (GLuint)setupTexture:(NSString *)fileName
+{
+    CGImageRef spriteImage = [UIImage imageNamed:@"timg"].CGImage;
+    if (!spriteImage) {
+        NSLog(@"获取图片失败");
+        exit(1);
     }
-    //5.将局部context，变成全局的
-    self.myContext = context;
-}
-
-//设置图层
-- (void)setupLayer
-{
-    self.myEagLayer = (CAEAGLLayer *)self.layer;
     
-    [self setContentScaleFactor:[[UIScreen mainScreen] scale]];
+    size_t width = CGImageGetWidth(spriteImage);
+    size_t height = CGImageGetHeight(spriteImage);
     
-    self.myEagLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:@false, kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
+    GLubyte *spriteData = (GLubyte *)calloc(width * height * 4, sizeof(GLubyte));
+    CGContextRef spriteContext = CGBitmapContextCreate(spriteData, width, height, 8, width * 4, CGImageGetColorSpace(spriteImage), kCGImageAlphaPremultipliedLast);
+    
+    CGRect rect = CGRectMake(0, 0, width, height);
+    
+//    CGContextTranslateCTM(spriteContext, rect.origin.x, rect.origin.y);
+    CGContextTranslateCTM(spriteContext, 0, rect.size.height);
+    CGContextScaleCTM(spriteContext, 1.0f, -1.0f);
+//    CGContextTranslateCTM(spriteContext, -rect.origin.x, -rect.origin.y);
+    
+    CGContextDrawImage(spriteContext, rect, spriteImage);
+    
+    CGContextRelease(spriteContext);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
+    float fw = width, fh = height;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, fw, fh, 0, GL_RGBA, GL_UNSIGNED_BYTE, spriteData);
+    
+    free(spriteData);
+    
+    return 0;
 }
 
-+ (Class)layerClass
-{
-    return [CAEAGLLayer class];
-}
+#pragma mark ---- Shader
 
-#pragma mark --shader
-
-//加载shader
 - (GLuint)loadShaders:(NSString *)vert withFrag:(NSString *)frag
 {
-    GLuint verShader, fragShader;
-    GLint program = glCreateProgram();
+    GLuint vertShader, fragShader;
     
-    [self compileShader:&verShader type:GL_VERTEX_SHADER file:vert];
+    GLuint program = glCreateProgram();
+    
+    [self compileShader:&vertShader type:GL_VERTEX_SHADER file:vert];
     [self compileShader:&fragShader type:GL_FRAGMENT_SHADER file:frag];
     
-    glAttachShader(program, verShader);
+    glAttachShader(program, vertShader);
     glAttachShader(program, fragShader);
     
-    glDeleteShader(verShader);
+    glDeleteShader(vertShader);
     glDeleteShader(fragShader);
     
     return program;
 }
 
-
-//编译shader
 - (void)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file
 {
     NSString *content = [NSString stringWithContentsOfFile:file encoding:NSUTF8StringEncoding error:nil];
@@ -160,8 +230,8 @@
     *shader = glCreateShader(type);
     
     glShaderSource(*shader, 1, &source, NULL);
-    
     glCompileShader(*shader);
 }
+
 
 @end
